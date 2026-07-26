@@ -1,0 +1,22 @@
+{
+  "form_id": "income_certificate_Bihar_v1",
+  "form_name": "आय प्रमाण पत्र (Income Certificate) — Bihar",
+  "issuing_authority": "Circle Officer / RTPS (Right to Public Services) portal",
+  "pdf_template": "templates/bihar_income_cert_2025.pdf",
+  "fields": [
+    { "id": "applicant_name",   "canonical": "name",            "label_hi": "आवेदक का नाम",   "required": true,  "transform": "title_case",   "coordinates": [110, 650] },
+    { "id": "father_name",      "canonical": "father_name",      "label_hi": "पिता का नाम",     "required": true,  "transform": "title_case",   "coordinates": [110, 620] },
+    { "id": "address",          "canonical": "address_line1",    "label_hi": "पूर्ण पता",       "required": true,  "transform": "wrap_2line",    "coordinates": [110, 590] },
+    { "id": "village_town",     "canonical": "village_town",      "label_hi": "ग्राम/पंचायत",   "required": true,  "coordinates": [110, 540] },
+    { "id": "district",         "canonical": "district",         "label_hi": "जिला",           "required": true,  "coordinates": [320, 540] },
+    { "id": "caste_category",   "canonical": "caste_category",   "label_hi": "जाति श्रेणी",     "required": false, "user_must_confirm": true, "coordinates": [110, 510] },
+    { "id": "annual_income",    "canonical": "annual_income",    "label_hi": "वार्षिक आय",      "required": true,  "validation": "^[0-9]{3,8}$", "user_must_confirm": true, "coordinates": [110, 480] },
+    { "id": "mobile",           "canonical": "mobile",           "label_hi": "मोबाइल नंबर",     "required": true,  "coordinates": [320, 480] }
+  ],
+  "required_supporting_docs": [
+    "Aadhaar card copy",
+    "Residential proof",
+    "Recent passport photo"
+  ],
+  "post_fill_instructions_hi": "फॉर्म भरने के बाद RTPS काउंटर या ऑनलाइन पोर्टल (serviceonline.bihar.gov.in) पर जमा करें। सामान्यतः 10-15 कार्यदिवसों में प्रमाण पत्र जारी होता है।"
+}

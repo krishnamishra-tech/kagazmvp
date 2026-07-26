@@ -1,0 +1,24 @@
+{
+  "form_id": "caste_domicile_certificate_UP_v1",
+  "form_name": "जाति/निवास प्रमाण पत्र (Caste & Domicile Certificate) — Uttar Pradesh",
+  "issuing_authority": "Tehsildar / e-Sathi portal",
+  "pdf_template": "templates/up_caste_domicile_cert_2025.pdf",
+  "fields": [
+    { "id": "applicant_name", "canonical": "name",           "label_hi": "आवेदक का नाम", "required": true, "transform": "title_case", "coordinates": [120, 640] },
+    { "id": "father_name",    "canonical": "father_name",     "label_hi": "पिता का नाम",  "required": true, "transform": "title_case", "coordinates": [120, 610] },
+    { "id": "dob",            "canonical": "dob",             "label_hi": "जन्म तिथि",    "required": true, "transform": "date_ddmmyyyy", "coordinates": [120, 580] },
+    { "id": "address",        "canonical": "address_line1",   "label_hi": "पता",         "required": true, "transform": "wrap_2line", "coordinates": [120, 550] },
+    { "id": "district",       "canonical": "district",        "label_hi": "जिला",        "required": true, "coordinates": [120, 500] },
+    { "id": "years_resident", "canonical": "years_at_address","label_hi": "निवास अवधि (वर्ष)", "required": true, "coordinates": [320, 500] },
+    { "id": "caste_category", "canonical": "caste_category",  "label_hi": "जाति श्रेणी",   "required": true, "user_must_confirm": true, "coordinates": [120, 470] },
+    { "id": "mobile",         "canonical": "mobile",          "label_hi": "मोबाइल नंबर",  "required": true, "coordinates": [320, 470] }
+  ],
+  "required_supporting_docs": [
+    "Aadhaar card copy",
+    "Existing caste certificate of father/family member (if available)",
+    "Residential proof (ration card / voter ID / electricity bill)",
+    "Recent passport photo"
+  ],
+  "post_fill_instructions_hi": "इस फॉर्म के साथ पिछला जाति प्रमाण पत्र (यदि परिवार में किसी के पास है) संलग्न करें — इससे सत्यापन तेज़ होता है। तहसील कार्यालय में जमा करें।",
+  "note": "Caste verification is the slowest step in this form (often needs revenue-record cross-check). Set user expectations that this takes longer than income certificate, typically 15-30 days."
+}

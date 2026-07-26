@@ -1,0 +1,67 @@
+{
+  "$schema_name": "kagaz_canonical_profile_v1",
+  "description": "One shared vocabulary of personal fields. Every form template maps its fields to these canonical fields instead of defining its own. Add a field here only when no existing field covers it.",
+
+  "fields": {
+    "name":                  { "type": "string", "extract_from": ["aadhaar", "marksheet", "old_certificate"], "pii_level": "high" },
+    "name_hindi":            { "type": "string", "extract_from": ["aadhaar"], "pii_level": "high" },
+    "father_name":           { "type": "string", "extract_from": ["aadhaar", "marksheet"], "pii_level": "high" },
+    "mother_name":           { "type": "string", "extract_from": ["marksheet", "old_certificate"], "pii_level": "high" },
+    "dob":                   { "type": "date",   "extract_from": ["aadhaar", "marksheet"], "pii_level": "high" },
+    "gender":                { "type": "enum",   "values": ["male", "female", "other"], "extract_from": ["aadhaar"], "pii_level": "medium" },
+    "marital_status":        { "type": "enum",   "values": ["single", "married", "widowed", "divorced"], "extract_from": [], "pii_level": "medium" },
+
+    "aadhaar_last4":         { "type": "string", "extract_from": ["aadhaar"], "pii_level": "critical", "note": "NEVER store full Aadhaar number. Mask to last 4 digits at extraction time, discard the rest." },
+    "pan_last4":             { "type": "string", "extract_from": ["pan_card"], "pii_level": "critical" },
+
+    "mobile":                { "type": "string", "extract_from": ["user_input"], "pii_level": "high" },
+    "email":                 { "type": "string", "extract_from": ["user_input"], "pii_level": "medium" },
+
+    "address_line1":         { "type": "string", "extract_from": ["aadhaar"], "pii_level": "high" },
+    "address_line2":         { "type": "string", "extract_from": ["aadhaar"], "pii_level": "medium" },
+    "village_town":          { "type": "string", "extract_from": ["aadhaar"], "pii_level": "medium" },
+    "tehsil":                { "type": "string", "extract_from": ["aadhaar", "user_input"], "pii_level": "low" },
+    "district":              { "type": "string", "extract_from": ["aadhaar"], "pii_level": "low" },
+    "state":                 { "type": "string", "extract_from": ["aadhaar"], "pii_level": "low" },
+    "pincode":               { "type": "string", "extract_from": ["aadhaar"], "pii_level": "low" },
+    "years_at_address":      { "type": "number", "extract_from": ["user_input"], "pii_level": "low" },
+
+    "family_members":        { "type": "list",   "extract_from": ["ration_card", "user_input"], "pii_level": "high", "note": "list of {name, relation, dob, aadhaar_last4}" },
+    "ration_card_no":        { "type": "string", "extract_from": ["ration_card"], "pii_level": "medium" },
+
+    "annual_income":         { "type": "number", "extract_from": ["user_input", "old_certificate"], "pii_level": "high", "user_must_confirm": true },
+    "occupation":            { "type": "string", "extract_from": ["user_input"], "pii_level": "medium" },
+    "employer_name":         { "type": "string", "extract_from": ["user_input"], "pii_level": "low" },
+
+    "caste_category":        { "type": "enum",   "values": ["general", "obc", "sc", "st", "ews"], "extract_from": ["old_certificate", "user_input"], "pii_level": "high", "user_must_confirm": true },
+
+    "highest_qualification": { "type": "string", "extract_from": ["marksheet"], "pii_level": "low" },
+    "institution_name":      { "type": "string", "extract_from": ["marksheet"], "pii_level": "low" },
+    "roll_no":               { "type": "string", "extract_from": ["marksheet"], "pii_level": "low" },
+    "year_of_passing":       { "type": "number", "extract_from": ["marksheet"], "pii_level": "low" },
+
+    "land_khasra_no":        { "type": "string", "extract_from": ["land_record", "user_input"], "pii_level": "medium" },
+    "land_area_acres":       { "type": "number", "extract_from": ["land_record", "user_input"], "pii_level": "medium" },
+
+    "bank_account_last4":    { "type": "string", "extract_from": ["bank_passbook", "user_input"], "pii_level": "critical" },
+    "ifsc":                  { "type": "string", "extract_from": ["bank_passbook", "user_input"], "pii_level": "medium" },
+    "bank_name":             { "type": "string", "extract_from": ["bank_passbook", "user_input"], "pii_level": "low" },
+
+    "bpl_status":            { "type": "boolean","extract_from": ["ration_card", "user_input"], "pii_level": "high" },
+    "existing_health_id":    { "type": "string", "extract_from": ["user_input"], "pii_level": "medium" },
+
+    "existing_dl_number":    { "type": "string", "extract_from": ["dl_card", "user_input"], "pii_level": "medium" },
+    "dl_state":              { "type": "string", "extract_from": ["dl_card", "user_input"], "pii_level": "low" },
+    "license_class":         { "type": "enum",   "values": ["learner", "mcwg", "lmv", "hmv", "permanent"], "extract_from": ["user_input"], "pii_level": "low" },
+    "blood_group":           { "type": "string", "extract_from": ["user_input"], "pii_level": "high" },
+
+    "photo_ref":             { "type": "file_ref", "extract_from": ["user_input"], "pii_level": "critical" },
+    "signature_ref":         { "type": "file_ref", "extract_from": ["user_input"], "pii_level": "critical" }
+  },
+
+  "extraction_notes": [
+    "aadhaar_last4, pan_last4, bank_account_last4: mask at extraction time in the vision-model prompt itself — instruct the model to only return last 4 digits, never the full number, so the full number never touches your logs or DB.",
+    "Any field marked user_must_confirm must be shown back to the user for explicit confirmation before it is used in any form fill — never silently trust an OCR/vision read for these.",
+    "photo_ref / signature_ref are file pointers (e.g. S3 key), not the raw bytes, to keep this profile object lightweight and separately access-controlled."
+  ]
+}

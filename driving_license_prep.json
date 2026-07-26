@@ -1,0 +1,52 @@
+{
+  "form_id": "driving_license_prep_v1",
+  "form_name": "Driving License — Learner's & Permanent (Sarathi Parivahan)",
+  "mode": "prep_sheet",
+  "note": "DL is NOT a downloadable-PDF-fill flow like the certificates above. It runs through the Sarathi/Parivahan web portal (sarathi.parivahan.gov.in), is state-RTO administered, and requires OTP/Aadhaar e-KYC auth that this tool should not touch directly. Output here is a field-by-field prep sheet in portal order, not an auto-filled PDF.",
+
+  "sub_flows": [
+    {
+      "flow_id": "learners_license",
+      "name_hi": "अधिगम लाइसेंस (Learner's License) — Form 2",
+      "fields_needed_in_portal_order": [
+        { "canonical": "name",           "label_hi": "पूरा नाम" },
+        { "canonical": "dob",            "label_hi": "जन्म तिथि" },
+        { "canonical": "aadhaar_last4",  "label_hi": "आधार सत्यापन (eKYC से स्वतः)" , "note": "actual Aadhaar auth happens on portal via OTP — we never submit this on user's behalf" },
+        { "canonical": "address_line1",  "label_hi": "पता" },
+        { "canonical": "blood_group",    "label_hi": "रक्त समूह" },
+        { "canonical": "license_class",  "label_hi": "वाहन श्रेणी (जैसे MCWG, LMV)" },
+        { "canonical": "mobile",         "label_hi": "मोबाइल नंबर" }
+      ],
+      "documents_to_keep_ready": [
+        "Aadhaar card (for e-KYC OTP on portal)",
+        "Passport-size photo (digital upload)",
+        "Signature (digital upload)",
+        "Address proof if Aadhaar address is outdated"
+      ],
+      "sequence_note_hi": "पहले ऑनलाइन टेस्ट (traffic rules quiz) स्लॉट बुक करना ज़रूरी है, फॉर्म भरने के तुरंत बाद।"
+    },
+    {
+      "flow_id": "permanent_license",
+      "name_hi": "स्थायी ड्राइविंग लाइसेंस (Permanent DL) — Form 1 / 1A / 4",
+      "prerequisite": "Must hold a valid learner's license for at least 30 days",
+      "fields_needed_in_portal_order": [
+        { "canonical": "existing_dl_number", "label_hi": "अधिगम लाइसेंस संख्या" },
+        { "canonical": "name",               "label_hi": "पूरा नाम" },
+        { "canonical": "address_line1",      "label_hi": "पता" },
+        { "canonical": "license_class",      "label_hi": "वाहन श्रेणी" }
+      ],
+      "documents_to_keep_ready": [
+        "Form 1A (medical certificate) — required if applying for transport/commercial vehicle class or applicant age 40+",
+        "Learner's license number/copy"
+      ],
+      "sequence_note_hi": "स्थायी लाइसेंस के लिए ड्राइविंग टेस्ट स्लॉट बुक करना होगा — RTO में शारीरिक उपस्थिति ज़रूरी है।"
+    }
+  ],
+
+  "output_format": "checklist_pdf_or_whatsapp_message",
+  "explicit_non_goals": [
+    "Do NOT auto-submit to sarathi.parivahan.gov.in on the user's behalf in v1 — Aadhaar e-KYC/OTP flows carry authentication and liability risk that isn't worth taking on before the rest of the product is proven.",
+    "Do NOT store full Aadhaar or DL numbers — last-4 only, same as other forms.",
+    "Revisit browser-automation fill-assist only after prep-mode is validated with real users and RTO portal stability is confirmed over a few months."
+  ]
+}

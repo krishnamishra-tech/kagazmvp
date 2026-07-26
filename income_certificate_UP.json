@@ -1,0 +1,23 @@
+{
+  "form_id": "income_certificate_UP_v1",
+  "form_name": "आय प्रमाण पत्र (Income Certificate) — Uttar Pradesh",
+  "issuing_authority": "Tehsildar / e-Sathi portal",
+  "pdf_template": "templates/up_income_cert_2025.pdf",
+  "fields": [
+    { "id": "applicant_name",   "canonical": "name",            "label_hi": "आवेदक का नाम",        "required": true,  "transform": "title_case",  "coordinates": [120, 640] },
+    { "id": "father_name",      "canonical": "father_name",      "label_hi": "पिता/पति का नाम",       "required": true,  "transform": "title_case",  "coordinates": [120, 610] },
+    { "id": "dob",              "canonical": "dob",              "label_hi": "जन्म तिथि",            "required": true,  "transform": "date_ddmmyyyy","coordinates": [120, 580] },
+    { "id": "address",          "canonical": "address_line1",    "label_hi": "पता",                 "required": true,  "transform": "wrap_2line",   "coordinates": [120, 550] },
+    { "id": "district",         "canonical": "district",         "label_hi": "जिला",                "required": true,  "coordinates": [120, 500] },
+    { "id": "tehsil",           "canonical": "tehsil",           "label_hi": "तहसील",               "required": true,  "coordinates": [320, 500] },
+    { "id": "occupation",       "canonical": "occupation",       "label_hi": "व्यवसाय",             "required": true,  "coordinates": [120, 470] },
+    { "id": "annual_income",    "canonical": "annual_income",    "label_hi": "वार्षिक आय (रुपये में)", "required": true,  "validation": "^[0-9]{3,8}$", "user_must_confirm": true, "coordinates": [120, 440] },
+    { "id": "mobile",           "canonical": "mobile",           "label_hi": "मोबाइल नंबर",          "required": true,  "coordinates": [320, 440] }
+  ],
+  "required_supporting_docs": [
+    "Aadhaar card copy",
+    "Self-declaration of income (affidavit if required by tehsil)",
+    "Recent passport photo"
+  ],
+  "post_fill_instructions_hi": "इस भरे हुए फॉर्म का प्रिंट लें, अपने हस्ताक्षर करें, और तहसील कार्यालय में सहायक दस्तावेजों के साथ जमा करें। कुछ जिलों में e-Sathi पोर्टल पर ऑनलाइन आवेदन भी किया जा सकता है।"
+}
