@@ -9,253 +9,106 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
   :root{
-    --paper: #EAE3D3;
-    --paper-deep: #DCD2B8;
-    --ink: #23324A;
-    --ink-soft: #4A5A73;
-    --stamp: #A8402A;
-    --line: #B8AD8F;
-    --approved: #4C6B4C;
-    --card: #F5F1E6;
+    --paper:#EAE3D3; --paper-deep:#DCD2B8; --ink:#23324A; --ink-soft:#4A5A73;
+    --stamp:#A8402A; --line:#B8AD8F; --approved:#4C6B4C; --card:#F5F1E6;
   }
   *{box-sizing:border-box;}
   body{margin:0; background:var(--paper); color:var(--ink); font-family:'Work Sans', sans-serif; line-height:1.5;}
-  .wrap{max-width:920px; margin:0 auto; padding:0 24px 80px;}
-
-  header{padding:56px 0 40px; border-bottom:1px solid var(--line); margin-bottom:40px;}
-  .wordmark{font-family:'Fraunces', serif; font-weight:700; font-size:clamp(40px, 7vw, 64px); letter-spacing:-0.02em; margin:0 0 6px; display:flex; align-items:baseline; gap:14px;}
+  .wrap{max-width:960px; margin:0 auto; padding:0 24px 80px;}
+  header{padding:56px 0 40px; border-bottom:1px solid var(--line); margin-bottom:36px;}
+  .wordmark{font-family:'Fraunces', serif; font-weight:700; font-size:clamp(38px,7vw,60px); letter-spacing:-0.02em; margin:0 0 6px; display:flex; align-items:baseline; gap:14px;}
   .wordmark .hi{font-family:'Tiro Devanagari Hindi', serif; font-size:0.6em; color:var(--stamp);}
   .tagline{font-size:16px; color:var(--ink-soft); max-width:520px;}
 
   .tabs{display:flex; gap:2px; flex-wrap:wrap; margin-bottom:28px; border-bottom:1px solid var(--line);}
-  .tab{
-    font-family:'Work Sans', sans-serif; font-size:13.5px; font-weight:600;
-    padding:12px 18px; background:none; border:none; cursor:pointer;
-    color:var(--ink-soft); border-bottom:2.5px solid transparent; margin-bottom:-1px;
-  }
-  .tab .hi{font-family:'Tiro Devanagari Hindi', serif; font-weight:400; display:block; font-size:11px; margin-top:2px;}
+  .tab{font-family:'Work Sans', sans-serif; font-size:13px; font-weight:600; padding:10px 14px; background:none; border:none; cursor:pointer; color:var(--ink-soft); border-bottom:2.5px solid transparent; margin-bottom:-1px;}
+  .tab .hi{font-family:'Tiro Devanagari Hindi', serif; font-weight:400; display:block; font-size:10.5px; margin-top:2px;}
   .tab.active{color:var(--ink); border-bottom-color:var(--stamp);}
   .tab:focus-visible{outline:2px solid var(--stamp); outline-offset:2px;}
 
   .panel{display:none;}
   .panel.active{display:block;}
 
-  .form-sheet{background:var(--card); border:1px solid var(--line); position:relative; padding:40px clamp(20px,5vw,56px); box-shadow: 6px 6px 0 var(--paper-deep);}
+  .form-sheet{background:var(--card); border:1px solid var(--line); position:relative; padding:40px clamp(20px,5vw,56px); box-shadow:6px 6px 0 var(--paper-deep);}
   .form-sheet::before{content:""; position:absolute; top:22px; right:22px; width:64px; height:64px; border:2px solid var(--line); border-radius:50%; opacity:0.35;}
-  .mode-badge{
-    display:inline-block; font-size:11px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;
-    padding:3px 9px; border:1px solid currentColor; margin-bottom:10px;
-  }
+  .mode-badge{display:inline-block; font-size:11px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; padding:3px 9px; border:1px solid currentColor; margin-bottom:10px;}
   .mode-badge.fill{color:var(--approved);}
   .mode-badge.prep{color:var(--stamp);}
+  .mode-badge.explain{color:#7A5A2E;}
   .form-title{font-family:'Fraunces', serif; font-size:24px; font-weight:600; margin:0 0 4px;}
-  .form-title .hi{font-family:'Tiro Devanagari Hindi', serif; display:block; font-size:17px; color:var(--ink-soft); font-weight:400; margin-top:2px;}
-  .form-note{font-size:13.5px; color:var(--ink-soft); margin:8px 0 0; max-width:560px;}
+  .form-title .hi{font-family:'Tiro Devanagari Hindi', serif; display:block; font-size:16px; color:var(--ink-soft); font-weight:400; margin-top:2px;}
+  .form-note{font-size:13.5px; color:var(--ink-soft); margin:8px 0 0; max-width:600px;}
 
   .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px 28px; margin-top:32px;}
-  .field{grid-column: span 2;}
-  .field.half{grid-column: span 1;}
-  @media (max-width:560px){ .field, .field.half{grid-column: span 2;} }
+  .field{grid-column:span 2;}
+  .field.half{grid-column:span 1;}
+  @media (max-width:560px){ .field, .field.half{grid-column:span 2;} }
   label{display:block; font-size:13px; font-weight:600; margin-bottom:2px;}
   label .hi{font-family:'Tiro Devanagari Hindi', serif; font-weight:400; color:var(--ink-soft); font-size:12px; margin-left:6px;}
-  input, select{width:100%; font-family:'Work Sans', sans-serif; font-size:15px; padding:10px 2px 8px; border:none; border-bottom:1.5px dotted var(--line); background:transparent; color:var(--ink);}
-  input:focus, select:focus{outline:none; border-bottom:1.5px solid var(--stamp);}
-  .confirm-note{grid-column: 1 / -1; font-size:12.5px; color:var(--stamp); background:rgba(168,64,42,0.08); border-left:2px solid var(--stamp); padding:8px 12px; margin-top:-6px;}
+  input, select, textarea{width:100%; font-family:'Work Sans', sans-serif; font-size:15px; padding:10px 2px 8px; border:none; border-bottom:1.5px dotted var(--line); background:transparent; color:var(--ink); resize:vertical;}
+  textarea{border:1px dotted var(--line); padding:10px; min-height:110px;}
+  input:focus, select:focus, textarea:focus{outline:none; border-color:var(--stamp);}
+  .confirm-note{grid-column:1 / -1; font-size:12.5px; color:var(--stamp); background:rgba(168,64,42,0.08); border-left:2px solid var(--stamp); padding:8px 12px; margin-top:-6px;}
 
   .actions{margin-top:36px; display:flex; align-items:center; gap:18px; flex-wrap:wrap;}
-  button{font-family:'Work Sans', sans-serif; font-weight:600; font-size:15px; background:var(--ink); color:var(--paper); border:none; padding:14px 28px; cursor:pointer; transition:transform 0.15s ease, background 0.15s ease;}
+  button{font-family:'Work Sans', sans-serif; font-weight:600; font-size:15px; background:var(--ink); color:var(--paper); border:none; padding:14px 28px; cursor:pointer; transition:transform .15s ease, background .15s ease;}
   button:hover{background:var(--stamp);}
   button:active{transform:scale(0.98);}
   button:focus-visible{outline:2px solid var(--stamp); outline-offset:3px;}
-  #status1,#status2,#status3,#status4{font-size:14px; color:var(--ink-soft);}
+  .status{font-size:14px; color:var(--ink-soft);}
 
   .result{margin-top:32px; display:none; align-items:center; gap:20px; padding:20px 24px; background:rgba(76,107,76,0.08); border:1px solid var(--approved);}
   .result.show{display:flex;}
   .stamp-badge{font-family:'Tiro Devanagari Hindi', serif; font-size:13px; color:var(--approved); border:2px solid var(--approved); border-radius:50%; width:64px; height:64px; display:flex; align-items:center; justify-content:center; text-align:center; transform:rotate(-8deg); flex-shrink:0; line-height:1.1;}
   .result a{color:var(--ink); font-weight:600; text-decoration:underline; text-decoration-color:var(--approved);}
 
+  .explain-output{margin-top:24px; display:none; background:#FBF8F0; border:1px solid var(--line); border-left:3px solid #7A5A2E; padding:20px 24px; font-size:14.5px;}
+  .explain-output.show{display:block;}
+  .explain-output h4{margin:0 0 8px; font-size:13px; text-transform:uppercase; letter-spacing:0.05em; color:#7A5A2E;}
+  .explain-output ul{margin:10px 0 0; padding-left:20px;}
+  .explain-output li{margin-bottom:6px;}
+
   footer{margin-top:60px; font-size:13px; color:var(--ink-soft); border-top:1px solid var(--line); padding-top:20px;}
 </style>
 </head>
 <body>
 <div class="wrap">
-
   <header>
     <p class="wordmark">kagaz <span class="hi">काग़ज़</span></p>
     <p class="tagline">Upload what you already have. Get the government form you need — filled, correctly, in minutes.</p>
   </header>
 
-  <div class="tabs" role="tablist">
-    <button class="tab active" data-panel="p1" role="tab" aria-selected="true">Income Certificate — UP<span class="hi">आय प्रमाण पत्र</span></button>
-    <button class="tab" data-panel="p2" role="tab" aria-selected="false">Income Certificate — Bihar<span class="hi">आय प्रमाण पत्र</span></button>
-    <button class="tab" data-panel="p3" role="tab" aria-selected="false">Caste/Domicile Certificate<span class="hi">जाति/निवास प्रमाण पत्र</span></button>
-    <button class="tab" data-panel="p4" role="tab" aria-selected="false">Driving License prep<span class="hi">ड्राइविंग लाइसेंस</span></button>
-  </div>
-
-  <!-- PANEL 1: Income Certificate UP -->
-  <div class="panel active" id="p1">
-    <div class="form-sheet">
-      <span class="mode-badge fill">Fills a PDF</span>
-      <h2 class="form-title">Income Certificate<span class="hi">आय प्रमाण पत्र — उत्तर प्रदेश</span></h2>
-      <form id="form1">
-        <div class="form-grid">
-          <div class="field half"><label>Applicant name <span class="hi">आवेदक का नाम</span></label><input class="f-name" required placeholder="Ramesh Kumar"></div>
-          <div class="field half"><label>Father's / husband's name <span class="hi">पिता/पति का नाम</span></label><input class="f-father" required placeholder="Suresh Kumar"></div>
-          <div class="field half"><label>Date of birth <span class="hi">जन्म तिथि</span></label><input class="f-dob" type="date" required></div>
-          <div class="field half"><label>Mobile <span class="hi">मोबाइल नंबर</span></label><input class="f-mobile" required pattern="[0-9]{10}" placeholder="9876543210"></div>
-          <div class="field"><label>Address <span class="hi">पता</span></label><input class="f-address" required placeholder="Village Rampur, Dist Gorakhpur"></div>
-          <div class="field half"><label>District <span class="hi">जिला</span></label><input class="f-district" required placeholder="Gorakhpur"></div>
-          <div class="field half"><label>Tehsil <span class="hi">तहसील</span></label><input class="f-tehsil" required placeholder="Sadar"></div>
-          <div class="field half"><label>Occupation <span class="hi">व्यवसाय</span></label><input class="f-occupation" required placeholder="Farmer"></div>
-          <div class="field half"><label>Annual income (₹) <span class="hi">वार्षिक आय</span></label><input class="f-income" type="number" required placeholder="85000"></div>
-          <p class="confirm-note">Income is self-declared and will be printed exactly as entered — please confirm it's correct.</p>
-        </div>
-        <div class="actions"><button type="submit">Generate certificate PDF</button><span id="status1"></span></div>
-      </form>
-      <div class="result" id="result1"><div class="stamp-badge">तैयार<br>Ready</div><div><div>Your filled certificate is ready.</div><a id="dl1" download="income_certificate_UP.pdf">Download PDF</a></div></div>
-    </div>
-  </div>
-
-  <!-- PANEL 2: Income Certificate Bihar -->
-  <div class="panel" id="p2">
-    <div class="form-sheet">
-      <span class="mode-badge fill">Fills a PDF</span>
-      <h2 class="form-title">Income Certificate<span class="hi">आय प्रमाण पत्र — बिहार</span></h2>
-      <p class="form-note">Submitted via RTPS (Right to Public Services) or the circle office counter.</p>
-      <form id="form2">
-        <div class="form-grid">
-          <div class="field half"><label>Applicant name <span class="hi">आवेदक का नाम</span></label><input class="f-name" required placeholder="Anita Devi"></div>
-          <div class="field half"><label>Father's name <span class="hi">पिता का नाम</span></label><input class="f-father" required placeholder="Ram Prasad"></div>
-          <div class="field"><label>Full address <span class="hi">पूर्ण पता</span></label><input class="f-address" required placeholder="Village Barauni, Dist Begusarai"></div>
-          <div class="field half"><label>Village/Panchayat <span class="hi">ग्राम/पंचायत</span></label><input class="f-village" required placeholder="Barauni"></div>
-          <div class="field half"><label>District <span class="hi">जिला</span></label><input class="f-district" required placeholder="Begusarai"></div>
-          <div class="field half"><label>Caste category <span class="hi">जाति श्रेणी</span></label>
-            <select class="f-caste"><option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>EWS</option></select>
-          </div>
-          <div class="field half"><label>Annual income (₹) <span class="hi">वार्षिक आय</span></label><input class="f-income" type="number" required placeholder="72000"></div>
-          <div class="field half"><label>Mobile <span class="hi">मोबाइल नंबर</span></label><input class="f-mobile" required pattern="[0-9]{10}" placeholder="9123456780"></div>
-          <p class="confirm-note">Income and caste category are self-declared — please confirm before generating.</p>
-        </div>
-        <div class="actions"><button type="submit">Generate certificate PDF</button><span id="status2"></span></div>
-      </form>
-      <div class="result" id="result2"><div class="stamp-badge">तैयार<br>Ready</div><div><div>Your filled certificate is ready.</div><a id="dl2" download="income_certificate_Bihar.pdf">Download PDF</a></div></div>
-    </div>
-  </div>
-
-  <!-- PANEL 3: Caste/Domicile Certificate -->
-  <div class="panel" id="p3">
-    <div class="form-sheet">
-      <span class="mode-badge fill">Fills a PDF</span>
-      <h2 class="form-title">Caste &amp; Domicile Certificate<span class="hi">जाति/निवास प्रमाण पत्र — उत्तर प्रदेश</span></h2>
-      <p class="form-note">Slower to verify than income certificate — revenue records are cross-checked. Typically 15–30 days.</p>
-      <form id="form3">
-        <div class="form-grid">
-          <div class="field half"><label>Applicant name <span class="hi">आवेदक का नाम</span></label><input class="f-name" required placeholder="Priya Yadav"></div>
-          <div class="field half"><label>Father's name <span class="hi">पिता का नाम</span></label><input class="f-father" required placeholder="Manoj Yadav"></div>
-          <div class="field half"><label>Date of birth <span class="hi">जन्म तिथि</span></label><input class="f-dob" type="date" required></div>
-          <div class="field half"><label>Years at address <span class="hi">निवास अवधि (वर्ष)</span></label><input class="f-years" type="number" required placeholder="22"></div>
-          <div class="field"><label>Address <span class="hi">पता</span></label><input class="f-address" required placeholder="Mohalla Kachehri, Lucknow"></div>
-          <div class="field half"><label>District <span class="hi">जिला</span></label><input class="f-district" required placeholder="Lucknow"></div>
-          <div class="field half"><label>Caste category <span class="hi">जाति श्रेणी</span></label>
-            <select class="f-caste"><option>OBC</option><option>General</option><option>SC</option><option>ST</option><option>EWS</option></select>
-          </div>
-          <p class="confirm-note">Caste category carries legal weight on this form — please confirm it matches your existing family records.</p>
-        </div>
-        <div class="actions"><button type="submit">Generate certificate PDF</button><span id="status3"></span></div>
-      </form>
-      <div class="result" id="result3"><div class="stamp-badge">तैयार<br>Ready</div><div><div>Your filled certificate is ready.</div><a id="dl3" download="caste_domicile_certificate.pdf">Download PDF</a></div></div>
-    </div>
-  </div>
-
-  <!-- PANEL 4: Driving License prep -->
-  <div class="panel" id="p4">
-    <div class="form-sheet">
-      <span class="mode-badge prep">Prep checklist — not an auto-filled form</span>
-      <h2 class="form-title">Driving License<span class="hi">अधिगम / स्थायी ड्राइविंग लाइसेंस</span></h2>
-      <p class="form-note">
-        DL runs through the Sarathi/Parivahan portal with Aadhaar OTP e-KYC — this tool doesn't submit
-        anything there for you. Instead it gives you every field in the exact order the portal asks,
-        plus the documents to keep ready, so you're not fumbling through it blind.
-      </p>
-      <form id="form4">
-        <div class="form-grid">
-          <div class="field half">
-            <label>Which license? <span class="hi">कौन सा लाइसेंस?</span></label>
-            <select class="f-flow" id="flowSelect">
-              <option value="learners">Learner's License (Form 2)</option>
-              <option value="permanent">Permanent License (Form 1/1A/4)</option>
-            </select>
-          </div>
-          <div class="field half"><label>Full name <span class="hi">पूरा नाम</span></label><input class="f-name" required placeholder="Vikram Singh"></div>
-          <div class="field half"><label>Date of birth <span class="hi">जन्म तिथि</span></label><input class="f-dob" type="date" required></div>
-          <div class="field half"><label>Blood group <span class="hi">रक्त समूह</span></label><input class="f-blood" placeholder="B+"></div>
-          <div class="field half"><label>Vehicle class <span class="hi">वाहन श्रेणी</span></label>
-            <select class="f-class"><option>MCWG</option><option>LMV</option><option>HMV</option></select>
-          </div>
-          <div class="field half"><label>Mobile <span class="hi">मोबाइल नंबर</span></label><input class="f-mobile" required pattern="[0-9]{10}" placeholder="9988776655"></div>
-          <div class="field" id="learnerFieldWrap"><label>Address <span class="hi">पता</span></label><input class="f-address" placeholder="Sector 14, Panchkula"></div>
-          <div class="field" id="permanentFieldWrap" style="display:none;"><label>Learner's license number <span class="hi">अधिगम लाइसेंस संख्या</span></label><input class="f-learner-no" placeholder="HR-0620230012345"></div>
-        </div>
-        <div class="actions"><button type="submit">Generate prep checklist PDF</button><span id="status4"></span></div>
-      </form>
-      <div class="result" id="result4"><div class="stamp-badge">तैयार<br>Ready</div><div><div>Your prep checklist is ready.</div><a id="dl4" download="dl_prep_checklist.pdf">Download PDF</a></div></div>
-    </div>
-  </div>
+  <div class="tabs" role="tablist" id="tabBar"></div>
+  <div id="panelHost"></div>
 
   <footer>
     These demos generate PDFs entirely in your browser — nothing typed here is sent anywhere. In production,
-    these same fields are pre-filled automatically from a photo of your Aadhaar card and old documents, so you
-    rarely type any of this yourself.
+    these same fields are pre-filled automatically from a photo of your Aadhaar card and old documents, and
+    the notice-explainer tab calls a real AI reading model — here it shows fixed sample output so the demo
+    works with no backend.
   </footer>
 </div>
 
 <script>
 const { PDFDocument, rgb, StandardFonts } = PDFLib;
 
-function formatDate(iso){
-  if(!iso) return "";
-  const [y,m,d] = iso.split("-");
-  return `${d}-${m}-${y}`;
-}
-
-// tab switching
-document.querySelectorAll(".tab").forEach(tab => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(t => { t.classList.remove("active"); t.setAttribute("aria-selected","false"); });
-    document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-    tab.classList.add("active");
-    tab.setAttribute("aria-selected","true");
-    document.getElementById(tab.dataset.panel).classList.add("active");
-  });
-});
-
-// DL flow toggling learner vs permanent fields
-document.getElementById("flowSelect").addEventListener("change", (e) => {
-  const isPermanent = e.target.value === "permanent";
-  document.getElementById("learnerFieldWrap").style.display = isPermanent ? "none" : "";
-  document.getElementById("permanentFieldWrap").style.display = isPermanent ? "" : "none";
-});
-
+// ---------- shared PDF builders ----------
 async function makeCertificatePdf(title, subtitle, rows){
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([595, 842]);
   const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const regular = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  let y = 780;
-  const left = 60;
-  page.drawText(title, { x: left, y, size: 18, font: bold, color: rgb(0.14,0.2,0.29) });
-  y -= 22;
-  page.drawText(subtitle, { x: left, y, size: 11, font: regular, color: rgb(0.3,0.35,0.45) });
-  y -= 40;
-  page.drawLine({ start:{x:left,y:y+10}, end:{x:535,y:y+10}, thickness:0.75, color: rgb(0.7,0.65,0.55) });
-  y -= 20;
+  let y = 780; const left = 60;
+  page.drawText(title, { x:left, y, size:18, font:bold, color:rgb(0.14,0.2,0.29) }); y -= 22;
+  page.drawText(subtitle, { x:left, y, size:11, font:regular, color:rgb(0.3,0.35,0.45) }); y -= 40;
+  page.drawLine({ start:{x:left,y:y+10}, end:{x:535,y:y+10}, thickness:0.75, color:rgb(0.7,0.65,0.55) }); y -= 20;
   rows.forEach(([label, value]) => {
-    page.drawText(label + ":", { x: left, y, size: 11, font: bold, color: rgb(0.14,0.2,0.29) });
-    page.drawText(String(value || ""), { x: left + 200, y, size: 11, font: regular, color: rgb(0.1,0.1,0.1) });
+    page.drawText(label + ":", { x:left, y, size:11, font:bold, color:rgb(0.14,0.2,0.29) });
+    page.drawText(String(value || ""), { x:left+210, y, size:11, font:regular, color:rgb(0.1,0.1,0.1) });
     y -= 26;
   });
   y -= 20;
-  page.drawText("This is a system-generated draft for review before submission.", { x: left, y, size: 9, font: regular, color: rgb(0.45,0.45,0.45) });
+  page.drawText("This is a system-generated draft for review before submission.", { x:left, y, size:9, font:regular, color:rgb(0.45,0.45,0.45) });
   return pdfDoc.save();
 }
 
@@ -264,102 +117,312 @@ async function makeChecklistPdf(title, subtitle, docChecklist, sequenceNote){
   const page = pdfDoc.addPage([595, 842]);
   const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const regular = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  let y = 780;
-  const left = 60;
-  page.drawText(title, { x: left, y, size: 18, font: bold, color: rgb(0.66,0.25,0.16) });
-  y -= 22;
-  page.drawText(subtitle, { x: left, y, size: 11, font: regular, color: rgb(0.3,0.35,0.45) });
-  y -= 34;
-  page.drawText("Documents to have ready before you start on Sarathi/Parivahan:", { x: left, y, size: 11, font: bold });
-  y -= 22;
-  docChecklist.forEach(item => {
-    page.drawText("- " + item, { x: left + 10, y, size: 10.5, font: regular });
-    y -= 20;
-  });
+  let y = 780; const left = 60;
+  page.drawText(title, { x:left, y, size:18, font:bold, color:rgb(0.66,0.25,0.16) }); y -= 22;
+  page.drawText(subtitle, { x:left, y, size:11, font:regular, color:rgb(0.3,0.35,0.45) }); y -= 34;
+  page.drawText("Documents to have ready before you start on Sarathi/Parivahan:", { x:left, y, size:11, font:bold }); y -= 22;
+  docChecklist.forEach(item => { page.drawText("- " + item, { x:left+10, y, size:10.5, font:regular }); y -= 20; });
   y -= 14;
-  page.drawText("Note:", { x: left, y, size: 11, font: bold });
-  y -= 18;
-  page.drawText(sequenceNote, { x: left + 10, y, size: 10, font: regular, color: rgb(0.3,0.3,0.3) });
-  y -= 30;
-  page.drawText("This is a prep checklist only — it is not submitted to any government portal automatically.", { x: left, y, size: 9, font: regular, color: rgb(0.45,0.45,0.45) });
+  page.drawText("Note:", { x:left, y, size:11, font:bold }); y -= 18;
+  page.drawText(sequenceNote, { x:left+10, y, size:10, font:regular, color:rgb(0.3,0.3,0.3) }); y -= 30;
+  page.drawText("This is a prep checklist only — it is not submitted to any government portal automatically.", { x:left, y, size:9, font:regular, color:rgb(0.45,0.45,0.45) });
   return pdfDoc.save();
 }
 
-function wireForm(formId, statusId, resultId, downloadId, buildFn){
-  document.getElementById(formId).addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const status = document.getElementById(statusId);
-    status.textContent = "Generating…";
-    const bytes = await buildFn(e.target);
-    const blob = new Blob([bytes], { type: "application/pdf" });
-    const url = URL.createObjectURL(blob);
-    document.getElementById(downloadId).href = url;
-    document.getElementById(resultId).classList.add("show");
-    status.textContent = "";
-  });
+function formatDate(iso){ if(!iso) return ""; const [y,m,d]=iso.split("-"); return `${d}-${m}-${y}`; }
+
+// ---------- config-driven "fill" forms ----------
+const FORMS = [
+  {
+    id:"income_up", tab:"Income Certificate — UP", tabHi:"आय प्रमाण पत्र",
+    title:"Income Certificate", titleHi:"आय प्रमाण पत्र — उत्तर प्रदेश",
+    pdfTitle:"INCOME CERTIFICATE", pdfSubtitle:"Uttar Pradesh — Tehsildar Office",
+    fields:[
+      {key:"name", label:"Applicant name", hi:"आवेदक का नाम", half:true, required:true, ph:"Ramesh Kumar"},
+      {key:"father", label:"Father's / husband's name", hi:"पिता/पति का नाम", half:true, required:true, ph:"Suresh Kumar"},
+      {key:"dob", label:"Date of birth", hi:"जन्म तिथि", type:"date", half:true, required:true},
+      {key:"mobile", label:"Mobile", hi:"मोबाइल नंबर", half:true, required:true, ph:"9876543210"},
+      {key:"address", label:"Address", hi:"पता", required:true, ph:"Village Rampur, Dist Gorakhpur"},
+      {key:"district", label:"District", hi:"जिला", half:true, required:true, ph:"Gorakhpur"},
+      {key:"tehsil", label:"Tehsil", hi:"तहसील", half:true, required:true, ph:"Sadar"},
+      {key:"occupation", label:"Occupation", hi:"व्यवसाय", half:true, required:true, ph:"Farmer"},
+      {key:"income", label:"Annual income (₹)", hi:"वार्षिक आय", type:"number", half:true, required:true, ph:"85000", confirm:true},
+    ]
+  },
+  {
+    id:"income_bihar", tab:"Income Certificate — Bihar", tabHi:"आय प्रमाण पत्र",
+    title:"Income Certificate", titleHi:"आय प्रमाण पत्र — बिहार",
+    note:"Submitted via RTPS (Right to Public Services) or the circle office counter.",
+    pdfTitle:"INCOME CERTIFICATE", pdfSubtitle:"Bihar — RTPS / Circle Office",
+    fields:[
+      {key:"name", label:"Applicant name", hi:"आवेदक का नाम", half:true, required:true, ph:"Anita Devi"},
+      {key:"father", label:"Father's name", hi:"पिता का नाम", half:true, required:true, ph:"Ram Prasad"},
+      {key:"address", label:"Full address", hi:"पूर्ण पता", required:true, ph:"Village Barauni, Dist Begusarai"},
+      {key:"village", label:"Village/Panchayat", hi:"ग्राम/पंचायत", half:true, required:true, ph:"Barauni"},
+      {key:"district", label:"District", hi:"जिला", half:true, required:true, ph:"Begusarai"},
+      {key:"caste", label:"Caste category", hi:"जाति श्रेणी", type:"select", options:["General","OBC","SC","ST","EWS"], half:true, confirm:true},
+      {key:"income", label:"Annual income (₹)", hi:"वार्षिक आय", type:"number", half:true, required:true, ph:"72000", confirm:true},
+      {key:"mobile", label:"Mobile", hi:"मोबाइल नंबर", half:true, required:true, ph:"9123456780"},
+    ]
+  },
+  {
+    id:"caste", tab:"Caste/Domicile Certificate", tabHi:"जाति/निवास प्रमाण पत्र",
+    title:"Caste & Domicile Certificate", titleHi:"जाति/निवास प्रमाण पत्र — उत्तर प्रदेश",
+    note:"Slower to verify than income certificate — revenue records are cross-checked. Typically 15–30 days.",
+    pdfTitle:"CASTE & DOMICILE CERTIFICATE", pdfSubtitle:"Uttar Pradesh — Tehsildar Office",
+    fields:[
+      {key:"name", label:"Applicant name", hi:"आवेदक का नाम", half:true, required:true, ph:"Priya Yadav"},
+      {key:"father", label:"Father's name", hi:"पिता का नाम", half:true, required:true, ph:"Manoj Yadav"},
+      {key:"dob", label:"Date of birth", hi:"जन्म तिथि", type:"date", half:true, required:true},
+      {key:"years", label:"Years at address", hi:"निवास अवधि (वर्ष)", type:"number", half:true, required:true, ph:"22"},
+      {key:"address", label:"Address", hi:"पता", required:true, ph:"Mohalla Kachehri, Lucknow"},
+      {key:"district", label:"District", hi:"जिला", half:true, required:true, ph:"Lucknow"},
+      {key:"caste", label:"Caste category", hi:"जाति श्रेणी", type:"select", options:["OBC","General","SC","ST","EWS"], half:true, confirm:true},
+    ]
+  },
+  {
+    id:"pmkisan", tab:"PM-Kisan", tabHi:"पीएम-किसान",
+    title:"PM-Kisan Registration", titleHi:"पीएम किसान सम्मान निधि पंजीकरण",
+    note:"Direct benefit transfer for landholding farmer families — ₹6,000/year in three installments.",
+    pdfTitle:"PM-KISAN REGISTRATION FORM", pdfSubtitle:"Direct Benefit Transfer — Ministry of Agriculture & Farmers Welfare",
+    fields:[
+      {key:"name", label:"Farmer's name", hi:"किसान का नाम", half:true, required:true, ph:"Bhagwan Das"},
+      {key:"father", label:"Father's name", hi:"पिता का नाम", half:true, required:true, ph:"Ram Lal"},
+      {key:"address", label:"Address", hi:"पता", required:true, ph:"Village Sisai, Dist Ranchi"},
+      {key:"district", label:"District", hi:"जिला", half:true, required:true, ph:"Ranchi"},
+      {key:"state", label:"State", hi:"राज्य", half:true, required:true, ph:"Jharkhand"},
+      {key:"khasra", label:"Land khasra/survey no.", hi:"खसरा/सर्वे नंबर", half:true, required:true, ph:"142/3"},
+      {key:"landarea", label:"Land area (acres)", hi:"भूमि क्षेत्रफल (एकड़)", type:"number", half:true, required:true, ph:"2.5"},
+      {key:"account", label:"Bank account number", hi:"बैंक खाता संख्या", half:true, required:true, ph:"31245678901", confirm:true},
+      {key:"ifsc", label:"IFSC code", hi:"आईएफएससी कोड", half:true, required:true, ph:"SBIN0001234"},
+      {key:"mobile", label:"Mobile", hi:"मोबाइल नंबर", half:true, required:true, ph:"9812345670"},
+    ]
+  },
+  {
+    id:"ration", tab:"Ration Card", tabHi:"राशन कार्ड",
+    title:"Ration Card Application", titleHi:"राशन कार्ड आवेदन",
+    note:"New household ration card, or adding/removing a family member from an existing card.",
+    pdfTitle:"RATION CARD APPLICATION", pdfSubtitle:"Food, Civil Supplies & Consumer Affairs Department",
+    fields:[
+      {key:"head", label:"Head of family", hi:"परिवार के मुखिया का नाम", half:true, required:true, ph:"Sunita Kumari"},
+      {key:"father", label:"Father's / husband's name", hi:"पिता/पति का नाम", half:true, required:true, ph:"Deepak Kumar"},
+      {key:"address", label:"Address", hi:"पता", required:true, ph:"Ward 6, Muzaffarpur"},
+      {key:"district", label:"District", hi:"जिला", half:true, required:true, ph:"Muzaffarpur"},
+      {key:"members", label:"Family members (name, relation — one per line)", hi:"परिवार के सदस्य", type:"textarea", ph:"Deepak Kumar, husband\nRohan, son (age 9)"},
+      {key:"category", label:"Category", hi:"श्रेणी", type:"select", options:["APL","BPL","Antyodaya"], half:true, confirm:true},
+      {key:"mobile", label:"Mobile", hi:"मोबाइल नंबर", half:true, required:true, ph:"9955443322"},
+    ]
+  },
+  {
+    id:"ayushman", tab:"Ayushman Bharat", tabHi:"आयुष्मान भारत",
+    title:"Ayushman Bharat (PM-JAY) Enrollment", titleHi:"आयुष्मान भारत योजना पंजीकरण",
+    note:"₹5 lakh/year health cover per family. Eligibility is usually determined by your SECC/ration card record.",
+    pdfTitle:"AYUSHMAN BHARAT — PM-JAY ENROLLMENT", pdfSubtitle:"National Health Authority",
+    fields:[
+      {key:"name", label:"Applicant name", hi:"आवेदक का नाम", half:true, required:true, ph:"Kavita Sharma"},
+      {key:"father", label:"Father's / husband's name", hi:"पिता/पति का नाम", half:true, required:true, ph:"Anil Sharma"},
+      {key:"dob", label:"Date of birth", hi:"जन्म तिथि", type:"date", half:true, required:true},
+      {key:"ration", label:"Ration card number", hi:"राशन कार्ड संख्या", half:true, ph:"BH-2023-004521"},
+      {key:"address", label:"Address", hi:"पता", required:true, ph:"Sector 3, Patna"},
+      {key:"district", label:"District", hi:"जिला", half:true, required:true, ph:"Patna"},
+      {key:"familysize", label:"Family size", hi:"परिवार का आकार", type:"number", half:true, required:true, ph:"5"},
+      {key:"mobile", label:"Mobile", hi:"मोबाइल नंबर", half:true, required:true, ph:"9876501234"},
+    ]
+  },
+  {
+    id:"scholarship", tab:"Scholarship", tabHi:"छात्रवृत्ति",
+    title:"Scholarship Application", titleHi:"छात्रवृत्ति आवेदन (राष्ट्रीय छात्रवृत्ति पोर्टल)",
+    note:"Uses your income certificate and caste certificate details directly — this is why those two forms come first in the product.",
+    pdfTitle:"SCHOLARSHIP APPLICATION", pdfSubtitle:"National Scholarship Portal",
+    fields:[
+      {key:"name", label:"Student name", hi:"छात्र का नाम", half:true, required:true, ph:"Aman Verma"},
+      {key:"father", label:"Father's name", hi:"पिता का नाम", half:true, required:true, ph:"Rajesh Verma"},
+      {key:"dob", label:"Date of birth", hi:"जन्म तिथि", type:"date", half:true, required:true},
+      {key:"institution", label:"Institution / course", hi:"संस्थान/कक्षा", half:true, required:true, ph:"Govt. Inter College, Class 12"},
+      {key:"income", label:"Annual family income (₹)", hi:"वार्षिक पारिवारिक आय", type:"number", half:true, required:true, ph:"65000", confirm:true},
+      {key:"caste", label:"Caste category", hi:"जाति श्रेणी", type:"select", options:["General","OBC","SC","ST","EWS"], half:true, confirm:true},
+      {key:"account", label:"Bank account number", hi:"बैंक खाता संख्या", half:true, required:true, ph:"20134567890", confirm:true},
+      {key:"ifsc", label:"IFSC code", hi:"आईएफएससी कोड", half:true, required:true, ph:"PUNB0123400"},
+      {key:"mobile", label:"Mobile", hi:"मोबाइल नंबर", half:true, required:true, ph:"9765432109"},
+    ]
+  },
+];
+
+// ---------- render config-driven panels ----------
+const tabBar = document.getElementById("tabBar");
+const panelHost = document.getElementById("panelHost");
+
+function fieldHtml(f, formIdx){
+  const cls = "field" + (f.half ? " half" : "");
+  const req = f.required ? "required" : "";
+  const inputId = `f_${formIdx}_${f.key}`;
+  let control;
+  if(f.type === "select"){
+    control = `<select id="${inputId}" ${req}>${f.options.map(o=>`<option>${o}</option>`).join("")}</select>`;
+  } else if(f.type === "textarea"){
+    control = `<textarea id="${inputId}" placeholder="${f.ph||''}"></textarea>`;
+  } else {
+    control = `<input id="${inputId}" type="${f.type||'text'}" ${req} placeholder="${f.ph||''}">`;
+  }
+  return `<div class="${cls}"><label>${f.label} <span class="hi">${f.hi}</span></label>${control}</div>`;
 }
 
-wireForm("form1","status1","result1","dl1", async (form) => {
-  const q = (c) => form.querySelector(c).value;
-  return makeCertificatePdf("INCOME CERTIFICATE", "Uttar Pradesh — Tehsildar Office", [
-    ["Applicant name", q(".f-name")],
-    ["Father's / husband's name", q(".f-father")],
-    ["Date of birth", formatDate(q(".f-dob"))],
-    ["Address", q(".f-address")],
-    ["District", q(".f-district")],
-    ["Tehsil", q(".f-tehsil")],
-    ["Occupation", q(".f-occupation")],
-    ["Annual income (Rs.)", q(".f-income")],
-    ["Mobile", q(".f-mobile")],
-  ]);
+FORMS.forEach((form, i) => {
+  // tab
+  const tabBtn = document.createElement("button");
+  tabBtn.className = "tab" + (i===0 ? " active" : "");
+  tabBtn.setAttribute("role","tab");
+  tabBtn.dataset.panel = "panel_" + form.id;
+  tabBtn.innerHTML = `${form.tab}<span class="hi">${form.tabHi}</span>`;
+  tabBar.appendChild(tabBtn);
+
+  // panel
+  const confirmFields = form.fields.filter(f => f.confirm).map(f => f.label);
+  const panel = document.createElement("div");
+  panel.className = "panel" + (i===0 ? " active" : "");
+  panel.id = "panel_" + form.id;
+  panel.innerHTML = `
+    <div class="form-sheet">
+      <span class="mode-badge fill">Fills a PDF</span>
+      <h2 class="form-title">${form.title}<span class="hi">${form.titleHi}</span></h2>
+      ${form.note ? `<p class="form-note">${form.note}</p>` : ""}
+      <form id="form_${form.id}">
+        <div class="form-grid">
+          ${form.fields.map(f => fieldHtml(f, i)).join("")}
+          ${confirmFields.length ? `<p class="confirm-note">${confirmFields.join(", ")} — self-declared, will print exactly as entered. Please confirm before generating.</p>` : ""}
+        </div>
+        <div class="actions"><button type="submit">Generate PDF</button><span class="status" id="status_${form.id}"></span></div>
+      </form>
+      <div class="result" id="result_${form.id}"><div class="stamp-badge">तैयार<br>Ready</div><div><div>Your filled form is ready.</div><a id="dl_${form.id}" download="${form.id}.pdf">Download PDF</a></div></div>
+    </div>`;
+  panelHost.appendChild(panel);
+
+  document.getElementById(`form_${form.id}`).addEventListener("submit", async (e) => {
+    e.preventDefault();
+    document.getElementById(`status_${form.id}`).textContent = "Generating…";
+    const rows = form.fields.map(f => {
+      const el = document.getElementById(`f_${i}_${f.key}`);
+      let val = el.value;
+      if(f.type === "date") val = formatDate(val);
+      return [f.label, val];
+    });
+    const bytes = await makeCertificatePdf(form.pdfTitle, form.pdfSubtitle, rows);
+    const url = URL.createObjectURL(new Blob([bytes], {type:"application/pdf"}));
+    document.getElementById(`dl_${form.id}`).href = url;
+    document.getElementById(`result_${form.id}`).classList.add("show");
+    document.getElementById(`status_${form.id}`).textContent = "";
+  });
 });
 
-wireForm("form2","status2","result2","dl2", async (form) => {
-  const q = (c) => form.querySelector(c).value;
-  return makeCertificatePdf("INCOME CERTIFICATE", "Bihar — RTPS / Circle Office", [
-    ["Applicant name", q(".f-name")],
-    ["Father's name", q(".f-father")],
-    ["Address", q(".f-address")],
-    ["Village/Panchayat", q(".f-village")],
-    ["District", q(".f-district")],
-    ["Caste category", q(".f-caste")],
-    ["Annual income (Rs.)", q(".f-income")],
-    ["Mobile", q(".f-mobile")],
-  ]);
+// ---------- special panel: Driving License (prep checklist, conditional fields) ----------
+const dlTab = document.createElement("button");
+dlTab.className = "tab";
+dlTab.dataset.panel = "panel_dl";
+dlTab.innerHTML = `Driving License prep<span class="hi">ड्राइविंग लाइसेंस</span>`;
+tabBar.appendChild(dlTab);
+
+const dlPanel = document.createElement("div");
+dlPanel.className = "panel";
+dlPanel.id = "panel_dl";
+dlPanel.innerHTML = `
+  <div class="form-sheet">
+    <span class="mode-badge prep">Prep checklist — not an auto-filled form</span>
+    <h2 class="form-title">Driving License<span class="hi">अधिगम / स्थायी ड्राइविंग लाइसेंस</span></h2>
+    <p class="form-note">DL runs through the Sarathi/Parivahan portal with Aadhaar OTP e-KYC — this tool doesn't submit anything there for you. Instead it gives every field in the exact order the portal asks, plus documents to keep ready.</p>
+    <form id="form_dl">
+      <div class="form-grid">
+        <div class="field half"><label>Which license? <span class="hi">कौन सा लाइसेंस?</span></label>
+          <select id="dl_flow"><option value="learners">Learner's License (Form 2)</option><option value="permanent">Permanent License (Form 1/1A/4)</option></select></div>
+        <div class="field half"><label>Full name <span class="hi">पूरा नाम</span></label><input id="dl_name" required placeholder="Vikram Singh"></div>
+        <div class="field half"><label>Date of birth <span class="hi">जन्म तिथि</span></label><input id="dl_dob" type="date" required></div>
+        <div class="field half"><label>Blood group <span class="hi">रक्त समूह</span></label><input id="dl_blood" placeholder="B+"></div>
+        <div class="field half"><label>Vehicle class <span class="hi">वाहन श्रेणी</span></label><select id="dl_class"><option>MCWG</option><option>LMV</option><option>HMV</option></select></div>
+        <div class="field half"><label>Mobile <span class="hi">मोबाइल नंबर</span></label><input id="dl_mobile" required pattern="[0-9]{10}" placeholder="9988776655"></div>
+        <div class="field" id="dl_learnerWrap"><label>Address <span class="hi">पता</span></label><input id="dl_address" placeholder="Sector 14, Panchkula"></div>
+        <div class="field" id="dl_permWrap" style="display:none;"><label>Learner's license number <span class="hi">अधिगम लाइसेंस संख्या</span></label><input id="dl_learnerNo" placeholder="HR-0620230012345"></div>
+      </div>
+      <div class="actions"><button type="submit">Generate prep checklist PDF</button><span class="status" id="status_dl"></span></div>
+    </form>
+    <div class="result" id="result_dl"><div class="stamp-badge">तैयार<br>Ready</div><div><div>Your prep checklist is ready.</div><a id="dl_download" download="dl_prep_checklist.pdf">Download PDF</a></div></div>
+  </div>`;
+panelHost.appendChild(dlPanel);
+
+document.getElementById("dl_flow").addEventListener("change", (e) => {
+  const isPerm = e.target.value === "permanent";
+  document.getElementById("dl_learnerWrap").style.display = isPerm ? "none" : "";
+  document.getElementById("dl_permWrap").style.display = isPerm ? "" : "none";
 });
 
-wireForm("form3","status3","result3","dl3", async (form) => {
-  const q = (c) => form.querySelector(c).value;
-  return makeCertificatePdf("CASTE & DOMICILE CERTIFICATE", "Uttar Pradesh — Tehsildar Office", [
-    ["Applicant name", q(".f-name")],
-    ["Father's name", q(".f-father")],
-    ["Date of birth", formatDate(q(".f-dob"))],
-    ["Years at address", q(".f-years")],
-    ["Address", q(".f-address")],
-    ["District", q(".f-district")],
-    ["Caste category", q(".f-caste")],
-  ]);
-});
-
-wireForm("form4","status4","result4","dl4", async (form) => {
-  const q = (c) => form.querySelector(c).value;
-  const flow = form.querySelector("#flowSelect").value;
-  const isPermanent = flow === "permanent";
-
-  const rows = isPermanent
+document.getElementById("form_dl").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  document.getElementById("status_dl").textContent = "Generating…";
+  const isPerm = document.getElementById("dl_flow").value === "permanent";
+  const rows = isPerm
     ? ["Learner's license copy/number", "Form 1A medical certificate (if age 40+ or commercial class)"]
     : ["Aadhaar card (for e-KYC OTP on the portal)", "Passport-size photo (digital upload)", "Signature (digital upload)", "Address proof if Aadhaar address is outdated"];
-
-  const sequenceNote = isPermanent
+  const seqNote = isPerm
     ? "You must book a driving test slot on the portal — physical presence at the RTO is required."
-    : "Book the online traffic-rules test slot right after this step — it's required before the learner's license is issued.";
+    : "Book the online traffic-rules test slot right after this step — required before the learner's license is issued.";
+  const title = isPerm ? "PERMANENT DRIVING LICENSE — PREP CHECKLIST" : "LEARNER'S LICENSE — PREP CHECKLIST";
+  const subtitle = `Name: ${document.getElementById("dl_name").value} | Class: ${document.getElementById("dl_class").value} | Blood group: ${document.getElementById("dl_blood").value} | Mobile: ${document.getElementById("dl_mobile").value}`;
+  const bytes = await makeChecklistPdf(title, subtitle, rows, seqNote);
+  const url = URL.createObjectURL(new Blob([bytes], {type:"application/pdf"}));
+  document.getElementById("dl_download").href = url;
+  document.getElementById("result_dl").classList.add("show");
+  document.getElementById("status_dl").textContent = "";
+});
 
-  const title = isPermanent ? "PERMANENT DRIVING LICENSE — PREP CHECKLIST" : "LEARNER'S LICENSE — PREP CHECKLIST";
-  const subtitle = `Name: ${q(".f-name")} | Class: ${form.querySelector(".f-class").value} | Blood group: ${q(".f-blood")} | Mobile: ${q(".f-mobile")}`;
+// ---------- special panel: Notice Explainer (demo output, no live backend here) ----------
+const neTab = document.createElement("button");
+neTab.className = "tab";
+neTab.dataset.panel = "panel_notice";
+neTab.innerHTML = `Notice Explainer<span class="hi">सूचना व्याख्या</span>`;
+tabBar.appendChild(neTab);
 
-  return makeChecklistPdf(title, subtitle, rows, sequenceNote);
+const nePanel = document.createElement("div");
+nePanel.className = "panel";
+nePanel.id = "panel_notice";
+nePanel.innerHTML = `
+  <div class="form-sheet">
+    <span class="mode-badge explain">AI explainer — demo output shown here, no live model call in this file</span>
+    <h2 class="form-title">Understand a Confusing Notice<span class="hi">कर सूचना, बैंक पत्र, या न्यायालय समन समझें</span></h2>
+    <p class="form-note">In production this reads an uploaded photo of your tax notice, bank letter, or court summons and explains it in plain Hindi/English with next steps. This demo shows what that output looks like using sample notice text below — paste anything and press Explain to see the fixed sample response.</p>
+    <form id="form_notice">
+      <div class="form-grid">
+        <div class="field"><label>Paste or describe the notice <span class="hi">सूचना का पाठ चिपकाएं</span></label>
+          <textarea id="notice_text" placeholder="e.g. Income Tax Dept notice under section 143(1) regarding AY 2025-26 return..."></textarea></div>
+      </div>
+      <div class="actions"><button type="submit">Explain this notice</button><span class="status" id="status_notice"></span></div>
+    </form>
+    <div class="explain-output" id="explain_output">
+      <h4>Plain-language summary</h4>
+      <p>This is an Income Tax Department notice under Section 143(1), sent after your return was processed. It's a routine intimation, not an accusation — it's telling you the department's computed tax matches (or slightly differs from) what you filed.</p>
+      <h4 style="margin-top:16px;">What you need to do</h4>
+      <ul>
+        <li>Check whether the "tax payable" or "refund" amount matches what you expected.</li>
+        <li>If it matches — no action needed, this is just a confirmation.</li>
+        <li>If it doesn't match, you have 30 days to respond/rectify via the income tax portal.</li>
+      </ul>
+      <p style="margin-top:14px; font-size:12.5px; color:#7A5A2E;">Demo note: this exact text is fixed for this demo regardless of what you pasted above — wiring this to a real vision/text model is a small, separate integration step.</p>
+    </div>
+  </div>`;
+panelHost.appendChild(nePanel);
+
+document.getElementById("form_notice").addEventListener("submit", (e) => {
+  e.preventDefault();
+  document.getElementById("status_notice").textContent = "";
+  document.getElementById("explain_output").classList.add("show");
+});
+
+// ---------- tab switching (delegated, works for all tabs incl. ones added above) ----------
+tabBar.addEventListener("click", (e) => {
+  const btn = e.target.closest(".tab");
+  if(!btn) return;
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById(btn.dataset.panel).classList.add("active");
 });
 </script>
-
 </body>
 </html>
