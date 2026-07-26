@@ -1,0 +1,22 @@
+{
+  "form_id": "ration_card_v1",
+  "form_name": "राशन कार्ड आवेदन (Ration Card Application)",
+  "issuing_authority": "Food, Civil Supplies & Consumer Affairs Department (state-specific portal)",
+  "pdf_template": "templates/ration_card_2025.pdf",
+  "note": "Household-level form, not individual — the canonical 'family_members' list field is required here, unlike single-applicant certificates.",
+  "fields": [
+    { "id": "head_of_family", "canonical": "name",            "label_hi": "परिवार के मुखिया का नाम", "required": true, "transform": "title_case" },
+    { "id": "father_name",    "canonical": "father_name",      "label_hi": "पिता/पति का नाम",         "required": true },
+    { "id": "address",        "canonical": "address_line1",    "label_hi": "पता",                    "required": true, "transform": "wrap_2line" },
+    { "id": "district",       "canonical": "district",         "label_hi": "जिला",                    "required": true },
+    { "id": "family_members", "canonical": "family_members",   "label_hi": "परिवार के सदस्य",          "required": true, "note": "list of {name, relation, dob}" },
+    { "id": "category",       "canonical": "bpl_status",       "label_hi": "श्रेणी (APL/BPL/Antyodaya)", "required": true, "user_must_confirm": true },
+    { "id": "mobile",         "canonical": "mobile",           "label_hi": "मोबाइल नंबर",             "required": true }
+  ],
+  "required_supporting_docs": [
+    "Aadhaar card of all family members",
+    "Proof of residence",
+    "Income certificate (for BPL/Antyodaya category claims)"
+  ],
+  "post_fill_instructions_hi": "फॉर्म और सभी सदस्यों के दस्तावेज़ नजदीकी खाद्य आपूर्ति कार्यालय या ऑनलाइन पोर्टल पर जमा करें। सत्यापन में सामान्यतः 3-4 सप्ताह लगते हैं।"
+}

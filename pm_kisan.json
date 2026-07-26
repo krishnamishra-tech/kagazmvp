@@ -1,0 +1,24 @@
+{
+  "form_id": "pm_kisan_v1",
+  "form_name": "पीएम-किसान सम्मान निधि पंजीकरण (PM-Kisan Registration)",
+  "issuing_authority": "Ministry of Agriculture & Farmers Welfare (via state agriculture dept / CSC)",
+  "pdf_template": "templates/pm_kisan_2025.pdf",
+  "fields": [
+    { "id": "farmer_name", "canonical": "name",             "label_hi": "किसान का नाम",        "required": true, "transform": "title_case" },
+    { "id": "father_name",  "canonical": "father_name",      "label_hi": "पिता का नाम",         "required": true, "transform": "title_case" },
+    { "id": "address",      "canonical": "address_line1",    "label_hi": "पता",                "required": true, "transform": "wrap_2line" },
+    { "id": "district",     "canonical": "district",         "label_hi": "जिला",                "required": true },
+    { "id": "state",        "canonical": "state",            "label_hi": "राज्य",               "required": true },
+    { "id": "khasra_no",    "canonical": "land_khasra_no",   "label_hi": "खसरा/सर्वे नंबर",       "required": true },
+    { "id": "land_area",    "canonical": "land_area_acres",  "label_hi": "भूमि क्षेत्रफल (एकड़)",  "required": true },
+    { "id": "account_no",   "canonical": "bank_account_last4","label_hi": "बैंक खाता संख्या",     "required": true, "user_must_confirm": true, "note": "Real submission needs the full account number; only last-4 is persisted in the stored profile per the canonical schema — full number is used transiently for the form fill only." },
+    { "id": "ifsc",         "canonical": "ifsc",             "label_hi": "आईएफएससी कोड",         "required": true },
+    { "id": "mobile",       "canonical": "mobile",           "label_hi": "मोबाइल नंबर",          "required": true }
+  ],
+  "required_supporting_docs": [
+    "Aadhaar card",
+    "Land ownership record (khatauni/khasra)",
+    "Bank passbook"
+  ],
+  "post_fill_instructions_hi": "फॉर्म को नजदीकी CSC या कृषि विभाग कार्यालय में भूमि दस्तावेज़ों के साथ जमा करें। पंजीकरण के बाद स्थिति pmkisan.gov.in पर आधार नंबर से जांची जा सकती है।"
+}

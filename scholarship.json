@@ -1,0 +1,25 @@
+{
+  "form_id": "scholarship_v1",
+  "form_name": "छात्रवृत्ति आवेदन (Scholarship Application — National Scholarship Portal)",
+  "issuing_authority": "National Scholarship Portal (scholarships.gov.in) / state scholarship portal",
+  "pdf_template": "templates/scholarship_2025.pdf",
+  "note": "This is the payoff form referenced in the product plan: it consumes 'annual_income' and 'caste_category' directly from a profile already populated by the income and caste certificate flows, so a returning user fills almost nothing new here.",
+  "fields": [
+    { "id": "student_name", "canonical": "name",             "label_hi": "छात्र का नाम",         "required": true, "transform": "title_case" },
+    { "id": "father_name",  "canonical": "father_name",      "label_hi": "पिता का नाम",          "required": true },
+    { "id": "dob",          "canonical": "dob",              "label_hi": "जन्म तिथि",            "required": true, "transform": "date_ddmmyyyy" },
+    { "id": "institution",  "canonical": "institution_name", "label_hi": "संस्थान/कक्षा",         "required": true },
+    { "id": "income",       "canonical": "annual_income",    "label_hi": "वार्षिक पारिवारिक आय",   "required": true, "user_must_confirm": true, "note": "pre-filled from income_certificate flow if already on profile" },
+    { "id": "caste",        "canonical": "caste_category",   "label_hi": "जाति श्रेणी",           "required": true, "user_must_confirm": true, "note": "pre-filled from caste_domicile_certificate flow if already on profile" },
+    { "id": "account_no",   "canonical": "bank_account_last4","label_hi": "बैंक खाता संख्या",      "required": true, "user_must_confirm": true },
+    { "id": "ifsc",         "canonical": "ifsc",             "label_hi": "आईएफएससी कोड",         "required": true },
+    { "id": "mobile",       "canonical": "mobile",           "label_hi": "मोबाइल नंबर",          "required": true }
+  ],
+  "required_supporting_docs": [
+    "Income certificate",
+    "Caste certificate (if claiming a reserved-category scholarship)",
+    "Latest marksheet",
+    "Bank passbook"
+  ],
+  "post_fill_instructions_hi": "आवेदन को राष्ट्रीय छात्रवृत्ति पोर्टल पर अपलोड करें और संस्थान से सत्यापन करवाएं। अंतिम तिथि से पहले जमा करना सुनिश्चित करें।"
+}

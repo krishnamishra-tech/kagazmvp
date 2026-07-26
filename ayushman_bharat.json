@@ -1,0 +1,23 @@
+{
+  "form_id": "ayushman_bharat_v1",
+  "form_name": "आयुष्मान भारत योजना पंजीकरण (Ayushman Bharat / PM-JAY Enrollment)",
+  "issuing_authority": "National Health Authority (via CSC / empanelled hospital / mera.pmjay.gov.in)",
+  "pdf_template": "templates/ayushman_bharat_2025.pdf",
+  "note": "Eligibility is typically pre-determined by SECC 2011 data or ration card record, not by income declared on this form — the tool should check eligibility via the family's ration_card_no before offering to fill this.",
+  "fields": [
+    { "id": "applicant_name", "canonical": "name",            "label_hi": "आवेदक का नाम",    "required": true, "transform": "title_case" },
+    { "id": "father_name",     "canonical": "father_name",     "label_hi": "पिता/पति का नाम",  "required": true },
+    { "id": "dob",             "canonical": "dob",             "label_hi": "जन्म तिथि",        "required": true, "transform": "date_ddmmyyyy" },
+    { "id": "ration_card_no",  "canonical": "ration_card_no",  "label_hi": "राशन कार्ड संख्या", "required": false },
+    { "id": "address",         "canonical": "address_line1",   "label_hi": "पता",             "required": true, "transform": "wrap_2line" },
+    { "id": "district",        "canonical": "district",        "label_hi": "जिला",             "required": true },
+    { "id": "family_size",     "canonical": "family_members",  "label_hi": "परिवार का आकार",    "required": true },
+    { "id": "mobile",          "canonical": "mobile",          "label_hi": "मोबाइल नंबर",      "required": true }
+  ],
+  "required_supporting_docs": [
+    "Aadhaar card",
+    "Ration card (for eligibility check)",
+    "Recent passport photo"
+  ],
+  "post_fill_instructions_hi": "नजदीकी CSC या empanelled अस्पताल में आधार e-KYC के साथ जमा करें। पात्रता की पुष्टि होने पर आयुष्मान कार्ड जारी होता है।"
+}
